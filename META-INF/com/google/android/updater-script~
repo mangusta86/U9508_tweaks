@@ -1,0 +1,291 @@
+#####################################################################################################
+#
+# BEGINNING OF FILE
+#
+#####################################################################################################
+#
+# 1 - INFORMATIONS
+#
+ui_print("@INFORMATIONS");
+ui_print("This installation will update your ROM.");
+ui_print("Hope you did a backup, if something goes wrong...");
+ui_print(" ");
+ui_print(" ");
+
+#####################################################################################################
+#
+# 2 - WIPE PARTITIONS
+#
+unmount("/cust");
+unmount("/data");
+unmount("/system");
+unmount("/cache");
+
+set_progress(0.01);
+ui_print("@Mounting & Formating Devices");
+
+set_progress(0.03);
+ui_print("  Mounting /modem/modem_image");
+mount("ext4", "EMMC", "/dev/block/mmcblk0p12", "/modem/modem_image");
+
+set_progress(0.05);
+ui_print("  Formatting and mounting /system");
+format("ext4", "EMMC", "/dev/block/mmcblk0p15", "0");
+mount("ext4", "EMMC", "/dev/block/mmcblk0p15", "/system");
+
+set_progress(0.09);
+if
+file_getprop("/tmp/aroma/wipe.prop","item.1.2") == "1"
+	then
+	ui_print("  Formatting and mounting /cust");
+	format("ext4", "EMMC", "/dev/block/mmcblk0p17", "0");
+	mount("ext4", "EMMC", "/dev/block/mmcblk0p17", "/cust");
+else
+	ui_print("  Mounting /cust");
+	mount("ext4", "EMMC", "/dev/block/mmcblk0p17", "/cust");
+endif;
+
+#SD and DATA ... Still need to work on this - START
+set_progress(0.1);
+if
+file_getprop("/tmp/aroma/wipe.prop","item.1.1") == "1" && file_getprop("/tmp/aroma/wipe.prop","item.1.3") == "0"
+	then
+	ui_print("  Wiping and mounting /data");
+	mount("ext4", "EMMC", "/dev/block/mmcblk0p18", "/data");
+	delete_recursive("/data/app");
+	delete_recursive("/data/app-asec");
+	delete_recursive("/data/app-private");
+	delete_recursive("/data/backup");
+	delete_recursive("/data/dalvik-cache");
+	delete_recursive("/data/data");
+	delete_recursive("/data/dontpanic");
+	delete_recursive("/data/drm");
+	delete_recursive("/data/dumplog");
+	delete_recursive("/data/gps");
+	delete_recursive("/data/k3_camera");
+	delete_recursive("/data/local");
+	delete_recursive("/data/lost+found");
+	delete_recursive("/data/misc");
+	delete_recursive("/data/peers");
+	delete_recursive("/data/property");
+	delete_recursive("/data/resource-cache");
+	delete_recursive("/data/sensor");
+	delete_recursive("/data/skin");
+	delete_recursive("/data/ssh");
+	delete_recursive("/data/system");
+	delete_recursive("/data/user");
+endif;
+
+if
+file_getprop("/tmp/aroma/wipe.prop","item.1.1") == "1" && file_getprop("/tmp/aroma/wipe.prop","item.1.3") == "1"
+	then
+	ui_print("  Formatting userdata partition");
+	format("ext4", "EMMC", "/dev/block/mmcblk0p18", "0");
+	ui_print("  Mounting /data and internal_SD");
+	mount("ext4", "EMMC", "/dev/block/mmcblk0p18", "/data");
+endif;
+
+if
+file_getprop("/tmp/aroma/wipe.prop","item.1.1") == "0" && file_getprop("/tmp/aroma/wipe.prop","item.1.3") == "1"
+	then
+	ui_print("  Mounting /data");
+	mount("ext4", "EMMC", "/dev/block/mmcblk0p18", "/data");	
+	ui_print("  Wiping internal_SD");
+	delete_recursive("/data/share");	
+endif;
+
+if
+file_getprop("/tmp/aroma/wipe.prop","item.1.1") == "0" && file_getprop("/tmp/aroma/wipe.prop","item.1.3") == "0"
+	then
+	ui_print("  Mounting /data");
+	mount("ext4", "EMMC", "/dev/block/mmcblk0p18", "/data");
+	ui_print("  Wiping dalvik-cache");
+	delete_recursive("/data/dalvik-cache");
+endif;
+
+#SD and DATA ... Still need to work on this - END
+
+set_progress(0.11);
+ui_print("  Formatting and mounting /cache");
+format("ext4", "EMMC", "/dev/block/mmcblk0p16", "0");
+mount("ext4", "EMMC", "/dev/block/mmcblk0p16", "/cache");
+
+#####################################################################################################
+#
+# 3 - INSTALLING MINIMAL ROM
+#
+ui_print(" ");
+ui_print("@Installing ROM");
+
+set_progress(0.12);
+show_progress(0.55, "-35000"); 
+ui_print("  Extracting system files");
+package_extract_dir("system", "/system");  
+
+set_progress(0.7);
+ui_print("  Extracting cust files");
+package_extract_dir("cust", "/cust");  
+
+set_progress(0.71);
+show_progress(0.1, "-5000");
+ui_print("  Extracting data files");
+package_extract_dir("data", "/data"); 
+
+set_progress(0.81);
+ui_print("  Extracting modem image");
+package_extract_dir("modemimage", "/modem/modem_image"); 
+
+#####################################################################################################
+#
+# 4 - INSTALLING EXTENSIONS
+#
+ui_print("@Flashing Extensions");
+
+# HUAWEI SERVICES
+if
+file_getprop("/tmp/aroma/mods.prop","item.1.1") == "1" && file_getprop("/tmp/aroma/type.prop","selected") == "2"
+	then
+	ui_print(" Huawei Services");
+	package_extract_dir("optional/hwservices/system", "/system"); 
+	package_extract_dir("optional/hwservices/cust", "/cust"); 
+endif;
+
+if
+file_getprop("/tmp/aroma/mods.prop","item.1.1") == "1" && file_getprop("/tmp/aroma/type.prop","selected") == "4"
+	then
+  	ui_print(" Huawei Services symlinked");
+	package_extract_dir("optional/hwservices/system/app", "/cust/channel/cn/delapp"); 
+	package_extract_dir("optional/hwservices/cust", "/cust"); 
+endif;
+
+# THIRD PARTIES APPS
+if
+file_getprop("/tmp/aroma/mods.prop","item.1.2") == "1" && file_getprop("/tmp/aroma/type.prop","selected") == "2"
+	then
+  	ui_print(" Huawei Blobs");
+	package_extract_dir("optional/hwblob/system", "/system"); 
+	package_extract_dir("optional/hwblob/cust", "/cust"); 
+endif;
+
+if
+file_getprop("/tmp/aroma/mods.prop","item.1.2") == "1" && file_getprop("/tmp/aroma/type.prop","selected") == "4"
+	then
+  	ui_print(" Huawei Blobs");
+	package_extract_dir("optional/hwblob/system/app", "/cust/channel/cn/delapp"); 
+	package_extract_dir("optional/hwblob/cust", "/cust"); 
+endif;
+
+# GAPPS
+if
+file_getprop("/tmp/aroma/mods.prop","item.2.1") == "1"
+	then
+  	ui_print(" Google Apps");
+	package_extract_dir("optional/gapps/system", "/system"); 
+endif;
+
+# SUPERSU
+if
+file_getprop("/tmp/aroma/mods.prop","item.2.2") == "1"
+	then
+  	ui_print(" SuperSu");
+	package_extract_dir("optional/supersu/system", "/system"); 
+endif;
+
+# TWEAKS
+if
+  file_getprop("/tmp/aroma/mods.prop","item.3.1") == "1"
+then
+  ui_print(" Tweaks");
+package_extract_dir("optional/tweaks/system", "/system"); 
+package_extract_dir("optional/tweaks/xml", "/cust/channel/cn/xml"); 
+package_extract_dir("optional/tweaks/res", "/cust/channel/cn/res"); 
+endif;
+
+# GS4 SOUNDS
+if
+  file_getprop("/tmp/aroma/mods.prop","item.3.2") == "1"
+then
+  ui_print(" Sounds GS4");
+delete_recursive("/system/media/audio/alarms");
+delete_recursive("/system/media/audio/ringtones");
+delete_recursive("/system/media/audio/notifications");
+package_extract_dir("optional/audioS4", "/data"); 
+endif;
+
+#####################################################################################################
+#
+# 5 - INSTALLING KERNEL
+#
+ui_print("@Flashing Kernel");
+
+  ui_print(" B550");
+package_extract_file("kernel/bootB550.img", "/dev/block/mmcblk0p11");
+package_extract_file("kernel/reservedB550.img", "/dev/block/mmcblk0p7");
+
+set_progress(0.93);
+
+#####################################################################################################
+#
+# 6 - FIXING PERMISSIONS AND CREATING SYMLINK
+#
+ui_print("@Creating Symlink and Fixing Permissions");
+show_progress(0.94, "-1000");
+
+#create symlink
+  ui_print(" Creating Symlink");
+        symlink("Roboto-Bold.ttf", "/system/fonts/DroidSans-Bold.ttf");
+        symlink("Roboto-Regular.ttf", "/system/fonts/DroidSans.ttf");
+symlink("/cust/channel/cn", "/data/cust");
+#
+#fix permissions
+  ui_print(" Fixing Permissions");
+set_perm_recursive(0, 0, 0755, 0644, "/system");
+set_perm_recursive(0, 2000, 0755, 0755, "/system/bin");
+set_perm(0, 3003, 06755, "/system/bin/ip");
+set_perm(0, 3003, 02750, "/system/bin/netcfg");
+set_perm(0, 3004, 02755, "/system/bin/ping");
+set_perm(0, 2000, 06750, "/system/bin/run-as");
+set_perm_recursive(1002, 1002, 0755, 0440, "/system/etc/bluetooth");
+set_perm(0, 0, 0755, "/system/etc/bluetooth");
+set_perm(1000, 1000, 0640, "/system/etc/bluetooth/auto_pairing.conf");
+set_perm(3002, 3002, 0444, "/system/etc/bluetooth/blacklist.conf");
+set_perm(1002, 1002, 0440, "/system/etc/dbus.conf");
+set_perm(1014, 2000, 0550, "/system/etc/dhcpcd/dhcpcd-run-hooks");
+set_perm(0, 2000, 0550, "/system/etc/init.goldfish.sh");
+set_perm_recursive(0, 0, 0755, 0555, "/system/etc/ppp");
+set_perm_recursive(0, 2000, 0755, 0644, "/system/vendor");
+set_perm_recursive(0, 0, 0755, 0644, "/system/vendor/firmware");
+set_perm(0, 2000, 0755, "/system/vendor/firmware");
+set_perm(0, 2000, 0755, "/system/vendor/lib");
+if
+  file_getprop("/tmp/aroma/mods.prop","item.2.1") == "1"
+then
+set_perm_recursive(0, 2000, 0755, 0755, "/system/xbin");
+set_perm(0, 0, 06755, "/system/xbin/su");
+set_perm(0, 0, 06755, "/system/etc/install-recovery.sh");
+set_perm_recursive(0, 2000, 0755, 0755, "/system/etc/init.d");
+endif;
+
+
+set_perm_recursive(1000, 1000, 0771, 0644, "/data/app");
+
+set_progress(0.99);
+
+ui_print(" ");
+
+#####################################################################################################
+#
+# 7 - FINISH
+#
+ui_print(" ");
+unmount("/cust");
+unmount("/data");
+unmount("/system");
+unmount("/cache");
+ui_print("@Finished");
+set_progress(1);
+#####################################################################################################
+#
+# END OF FILE
+#
+#####################################################################################################

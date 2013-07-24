@@ -1,0 +1,54 @@
+<b><#selectbg_g>Mangusta B550 - 2.0 </#></b>
+<*>Add init.d support </*>
+<*>Add /res/uci.sh interface / BETA </*>
+<*>Fix toolbox and busybox symlink in updater script</*>
+<*>Updated busybox </*>
+<*>Removed SuperSU for Koush's opensource SuperUser </*>
+<*>Updated gps fix </*>
+
+<b><#selectbg_g>Mangusta B550 - 1.1 </#></b>
+<*>Fix russian translation / AROMA</*>
+<*>Fixed bug with custom install and GS4 sounds</*>
+<*>Fix mounts and unmounts in updater script</*>
+
+<b><#selectbg_g>Mangusta B550 - 1.0 </#></b>
+<*>Multilanguage almost completed / AROMA</*>
+<*>Added tweak for launcher, enabled PMQOS</*>
+<*>Added Galaxy S4 sounds</*>
+<*>add wipe internal sd / AROMA</*>
+<*>move Huawei system app folder in custom install / AROMA</*>
+<*>add new gps.conf tweak</*>
+
+<b><#selectbg_g>Mangusta B550 - 0.6 </#></b>
+<*>Other tweaks, build.prop, hwdefault.xml</*>
+<*>Multilanguage work in progress (italian completed) / AROMA</*>
+<*>Fixing Huawei Services and blob files</*>
+<*>Removed french / AROMA</*>
+
+<b><#selectbg_g>Mangusta B550 - 0.5 </#></b>
+<*>Add tweaks, build.prop, hwdefault.xml</*>
+<*>Delete kernel choice, use default B550</*>
+<*>prepare some pages for multilaguage / AROMA</*>
+
+<b><#selectbg_g>Mangusta B550 - 0.4 </#></b>
+<*>Fix folder positions</*>
+<*>Add wipe and Huawei icon / AROMA</*>
+<*>prepare wipe and install page for multilanguage / AROMA</*>
+<*>Fix Custom mode / AROMA </*>
+
+<b><#selectbg_g>Mangusta B550 - 0.3 </#></b>
+<*>Fix mount points</*>
+<*>Add modem image</*>
+<*>Fix permissions of Su only if installed</*>
+<*>Fix icons path</*>
+
+<b><#selectbg_g>Mangusta B550 - 0.2 </#></b>
+<*>Add changelog</*>
+<*>Removing other Aroma themes</*>
+
+<b><#selectbg_g>Mangusta B550 - 0.1 </#></b>
+<*>First try, everithing new about Aroma and ROM folders</*>
+
+<b><#selectbg_g>Huawei - B550 </#></b>
+<*>xxx</*>
+<*>xxx</*>

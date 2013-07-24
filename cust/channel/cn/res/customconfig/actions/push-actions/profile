@@ -1,0 +1,5 @@
+#!/system/bin/sh
+
+PROFILE=`cat /data/.siyah/.active.profile`;
+
+echo "your profile: \"$PROFILE\"";
