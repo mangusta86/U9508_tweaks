@@ -1,15 +1,10 @@
-#!/system/bin/sh
+#!/system/xbin/sh
 
 # Created By Dorimanx and Dairinin
 # Modded by Mangusta
 
-if [ -e /system/xbin/busybox ]; then
-	BB=/system/xbin/busybox
-elif [ -e /system/bin/busybox ]; then
-	BB=/system/bin/busybox
-else
-	BB=not_supported
-fi;
+BB=/system/xbin/busybox
+
 
 if [ "a$1" != "a" ] && [ -e "$BB" ]; then
 	cron_localtime () {

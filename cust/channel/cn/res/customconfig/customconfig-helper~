@@ -9,7 +9,6 @@ PROFILE_PATH="/data/.siyah";
 TEMP_CONFIG="${PROFILE_PATH}/.config.tmp";
 LAST_SELECTED=".active.profile";
 ACTIVE_PROFILE="${PROFILE_PATH}/${LAST_SELECTED}";
-BB="/system/xbin/busybox";
 
 apply_config()
 {
@@ -27,7 +26,7 @@ apply_config()
 
 print_config()
 {
-	$BB cat $CONFIG_XML;
+	cat $CONFIG_XML;
 }
 
 list_profile()
@@ -43,12 +42,12 @@ select_profile()
 		# if there is no such profile, create one
 		_ACTIVE_PROFILE=`cat $ACTIVE_PROFILE`;
 		if [ ! -f ${PROFILE_PATH}/${_ACTIVE_PROFILE}.profile ]; then
-			$BB cp -a $DEFAULT_PROFILE ${PROFILE_PATH}/${1}.profile;
-			[ "$_ACTIVE_PROFILE" == "battery" ] && $BB cp -a $BATTERY_PROFILE ${PROFILE_PATH}/${1}.profile;
-			[ "$_ACTIVE_PROFILE" == "performance" ] && $BB cp -a $PERFORMANCE_PROFILE ${PROFILE_PATH}/${1}.profile;
+			cp -a $DEFAULT_PROFILE ${PROFILE_PATH}/${1}.profile;
+			[ "$_ACTIVE_PROFILE" == "battery" ] && cp -a $BATTERY_PROFILE ${PROFILE_PATH}/${1}.profile;
+			[ "$_ACTIVE_PROFILE" == "performance" ] && cp -a $PERFORMANCE_PROFILE ${PROFILE_PATH}/${1}.profile;
 		fi;
 		if [ ! -f ${PROFILE_PATH}/${1}.profile ]; then
-			$BB cp -a ${PROFILE_PATH}/${_ACTIVE_PROFILE}.profile ${PROFILE_PATH}/${1}.profile;
+			cp -a ${PROFILE_PATH}/${_ACTIVE_PROFILE}.profile ${PROFILE_PATH}/${1}.profile;
 		fi;
 		echo "$1" > $ACTIVE_PROFILE;
 		chmod 777 ${PROFILE_PATH}/${1}.profile;
@@ -92,9 +91,9 @@ write_config()
 	done < $DEFAULT_PROFILE > $TEMP_CONFIG;
 
 	# copy the new config to the actual profile
-	$BB cp $TEMP_CONFIG $_CONFIG_FILE;
-	$BB chmod 777 $_CONFIG_FILE;
-	$BB rm -f $TEMP_CONFIG;
+	cp $TEMP_CONFIG $_CONFIG_FILE;
+	chmod 777 $_CONFIG_FILE;
+	rm -f $TEMP_CONFIG;
 }
 
 read_config()
@@ -124,19 +123,19 @@ read_defaults()
 # some initialization code
 
 if [ ! -f $PROFILE_PATH/$LAST_SELECTED ]; then 
-	$BB echo "default" > $PROFILE_PATH/$LAST_SELECTED;
-	$BB chmod 777 $PROFILE_PATH/$LAST_SELECTED;
+	echo "default" > $PROFILE_PATH/$LAST_SELECTED;
+	chmod 777 $PROFILE_PATH/$LAST_SELECTED;
 fi;
 
 if [ ! -f $PROFILE_PATH/default.profile ]; then
-	$BB cp -a $DEFAULT_PROFILE $PROFILE_PATH/default.profile;
-	$BB chmod 777 $PROFILE_PATH/default.profile;
+	cp -a $DEFAULT_PROFILE $PROFILE_PATH/default.profile;
+	chmod 777 $PROFILE_PATH/default.profile;
 fi;
 if [ ! -f $PROFILE_PATH/battery.profile ]; then
-	$BB cp -a $BATTERY_PROFILE $PROFILE_PATH/battery.profile;
-	$BB chmod 777 $PROFILE_PATH/battery.profile;
+	cp -a $BATTERY_PROFILE $PROFILE_PATH/battery.profile;
+	chmod 777 $PROFILE_PATH/battery.profile;
 fi;
 if [ ! -f $PROFILE_PATH/performance.profile ]; then
-	$BB cp -a $PERFORMANCE_PROFILE $PROFILE_PATH/performance.profile;
-	$BB chmod 777 $PROFILE_PATH/performance.profile;
+	cp -a $PERFORMANCE_PROFILE $PROFILE_PATH/performance.profile;
+	chmod 777 $PROFILE_PATH/performance.profile;
 fi;

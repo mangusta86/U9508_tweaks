@@ -3,7 +3,7 @@
 # by Gokhan Moral and Voku and Dorimanx and Alucard24
 
 # stop uci.sh from running all the PUSH Buttons in stweaks on boot
-BB="/system/xbin/busybox";
+BB=/system/xbin/busybox
 
 $BB chown -R root:system /res/customconfig/actions/;
 $BB chmod -R 6755 /res/customconfig/actions/;

@@ -1,4 +1,4 @@
-#!/system/xbin/sh
+#!/system/bin/sh
 # universal configurator interface
 # by Gokhan Moral
 

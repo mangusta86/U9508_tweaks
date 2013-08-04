@@ -15,7 +15,24 @@ ui_print(" ");
 
 #####################################################################################################
 #
-# 3 - INSTALLING TWEAKS ROM
+# 2 - Mounting partitions
+#
+ui_print(" ");
+ui_print("@Mounting partitions");
+mount("ext4", "EMMC", "/dev/block/platform/hi_mci.1/by-name/system", "/system");
+mount("ext4", "EMMC", "/dev/block/platform/hi_mci.1/by-name/cust", "/cust");
+
+#####################################################################################################
+#
+# 3 - DELETING TOOLBOX SYMLINK
+#
+
+delete("/system/bin/cp");
+delete("/system/bin/grep");
+
+#####################################################################################################
+#
+# 4 - INSTALLING TWEAKS
 #
 
 set_progress(0.01);
@@ -23,7 +40,6 @@ ui_print(" ");
 ui_print("@Installing TWEAKS");
 
 set_progress(0.12);
-show_progress(0.55, "-35000"); 
 ui_print("  Extracting system files");
 package_extract_dir("system", "/system");  
 

@@ -1,12 +1,12 @@
-#!/system/bin/sh
+#!/system/xbin/sh
 
 read -t 5 -p "Start fixing DATA partition? 5sec time out then NO (y/n)"
 if [ "$REPLY" == "y" ]; then
 	if [ ! -e /data/dalvik-cache/ ]; then
 		echo "starting to fix DATA"
-		/sbin/e2fsck -fyc /dev/block/mmcblk0p18;
-		/sbin/e2fsck -fyc /dev/block/mmcblk0p18;
-		/sbin/e2fsck -p /dev/block/mmcblk0p18;
+		/system/xbin/e2fsck -fyc /dev/block/mmcblk0p18;
+		/system/xbin/e2fsck -fyc /dev/block/mmcblk0p18;
+		/system/xbin/e2fsck -p /dev/block/mmcblk0p18;
 		mount -t ext4 /dev/block/mmcblk0p18 /data;
 		rm -f /data/dalvik-cache/*;
 		sync;
