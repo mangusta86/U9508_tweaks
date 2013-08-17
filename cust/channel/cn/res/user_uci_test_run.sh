@@ -1,4 +1,4 @@
-#!/system/xbin/sh
+#!/system/bin/sh
 # universal configurator interface for user/dev/ testing.
 # by Gokhan Moral and Voku and Dorimanx and Alucard24
 

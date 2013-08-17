@@ -1,4 +1,4 @@
-#!/system/xbin/sh
+#!/system/bin/sh
 # Script to create symlink for uci interface
 #
 # Modded by Mangusta for U9508
@@ -177,6 +177,7 @@ $BB chmod 666 /tmp/uci_done;
 	# ###############################################################
 	# I/O related tweaks
 	# ###############################################################
+
 
 	DM=`ls -d /sys/block/dm*`;
 	for i in ${DM}; do

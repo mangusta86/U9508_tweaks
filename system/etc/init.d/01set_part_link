@@ -1,4 +1,4 @@
-#!/system/xbin/sh
+#!/system/bin/sh
 
 # stop ROM VM from booting!
 stop;
@@ -62,12 +62,7 @@ $BB chmod 744 /proc/cmdline;
 LOG_SDCARDS=/log-sdcards
 FIX_BINARY=/system/bin/fsck_msdos
 
-# creating sd card size temp file
-if [ ! -e /cache/tmp/sdcard_size ] 
-	then
-	$BB touch /cache/tmp/sdcard_size;	
-fi;
-fdisk -l /dev/block/mmcblk1 | grep Disk | awk '{print $5}' | sed 's/.0//' > /tmp/sdcard_size
+
 
 SDCARD_FIX()
 {
@@ -76,6 +71,13 @@ SDCARD_FIX()
 	$BB echo "FIXING STORAGE" >> $LOG_SDCARDS;
 
 	if [ -e /dev/block/mmcblk1p1 ]; then
+		
+		# creating sd card size temp file
+		if [ ! -e /cache/tmp/sdcard_size ]; then	
+			$BB touch /cache/tmp/sdcard_size;	
+		fi;
+		$BB fdisk -l /dev/block/mmcblk1 | $BB grep Disk| $BB awk '{print $5}'| $BB sed 's/.$//g'| $BB sed 's/\.//g' > /cache/tmp/sdcard_size;
+
 		$BB echo "EXTERNAL SDCARD CHECK" >> $LOG_SDCARDS;
 		$BB sh -c "$FIX_BINARY -p -f /dev/block/mmcblk1p1" >> $LOG_SDCARDS;
 	else

@@ -29,6 +29,7 @@ mount("ext4", "EMMC", "/dev/block/platform/hi_mci.1/by-name/cust", "/cust");
 
 delete("/system/bin/cp");
 delete("/system/bin/grep");
+delete("/system/bin/busybox");
 
 #####################################################################################################
 #
@@ -129,7 +130,7 @@ symlink("busybox", "/system/xbin/[", "/system/xbin/[[",
         "/system/xbin/zcat");
 
 symlink("/cust/channel/cn", "/data/cust");
-
+symlink("mksh", "/system/bin/sh"); 
 #
 #fix permissions
   ui_print(" Fixing Permissions");

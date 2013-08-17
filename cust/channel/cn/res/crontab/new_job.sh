@@ -1,4 +1,4 @@
-#!/system/xbin/sh
+#!/system/bin/sh
 
 # Created By Dorimanx and Dairinin
 # Modded by Mangusta
